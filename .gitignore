@@ -1,0 +1,13 @@
+build
+dist
+*.so
+*.dll
+src/api
+*.o
+*.egg-info
+*__pycache__*
+*.pyc
+*.pytest_cache*
+*img*.png
+CMakeCache.txt
+CMakeFiles
