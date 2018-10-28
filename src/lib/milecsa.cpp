@@ -3,6 +3,8 @@
 #include "milecsa.hpp"
 #include "json.hpp"
 
+//#define __DUBUG_PRINT_ARGS__
+
 static PyObject *PyErr_MileCsaError;
 
 auto __error_handler = [](milecsa::result code, const std::string &error) mutable -> void {
@@ -64,19 +66,24 @@ static PyObject* py_generate_key_pair_from_private_key(PyObject *self, PyObject 
 
 static PyObject* py_create_transaction_transfer_assets(PyObject *self, PyObject *args)
 {
+
+#ifdef __DUBUG_PRINT_ARGS__
+    PyObject_Print(args, stderr, Py_PRINT_RAW);
+#endif
+
     char *dest;
     char *pk;
     char *private_key;
-    char *amount;
     int  assetCode;
+    float amount;
+    float fee;
     char *memo;
-    char *fee;
     uint256_t blockId;
     uint64_t transactionId;
 
-    if (!PyArg_ParseTuple(args, "sssKKiszz", &pk, &private_key, &dest,
+    if (!PyArg_ParseTuple(args, "sssKKiffz", &pk, &private_key, &dest,
                           &blockId, &transactionId, &assetCode,
-                          &amount, &memo, &fee)) {
+                          &amount, &fee, &memo)) {
         PyErr_SetString(PyErr_MileCsaError, "not enough args");
         return NULL;
     }
@@ -95,10 +102,10 @@ static PyObject* py_create_transaction_transfer_assets(PyObject *self, PyObject 
             dest,
             blockId,
             transactionId,
-            assetCode,
+            milecsa::assets::TokenFromCode(assetCode),
             amount,
+            fee,
             memo == NULL ? "" : memo,
-            fee == NULL ? "" : fee,
             __error_handler)) {
 
 
@@ -110,19 +117,26 @@ static PyObject* py_create_transaction_transfer_assets(PyObject *self, PyObject 
 
 static PyObject* py_create_transaction_emission(PyObject *self, PyObject *args)
 {
-    char *dest;
+
+#ifdef __DUBUG_PRINT_ARGS__
+    PyObject_Print(args, stderr, Py_PRINT_RAW);
+#endif
+
     char *pk;
     char *private_key;
     int  assetCode;
-    char *amount;
-    char *memo;
-    char *fee;
+    float fee;
     uint256_t blockId;
     uint64_t transactionId;
 
-    if (!PyArg_ParseTuple(args, "sssKKiszz", &pk, &private_key, &dest,
-                          &blockId, &transactionId, &assetCode,
-                          &amount, &memo, &fee)) {
+    if (!PyArg_ParseTuple(args,
+                           "ssKKif",
+                           &pk,
+                           &private_key,
+                           &blockId,
+                           &transactionId,
+                           &assetCode,
+                           &fee)) {
         PyErr_SetString(PyErr_MileCsaError, "not enough args");
         return NULL;
     }
@@ -138,13 +152,10 @@ static PyObject* py_create_transaction_emission(PyObject *self, PyObject *args)
 
      if (auto transfer = milecsa::transaction::Emission<nlohmann::json>::CreateRequest(
             *pair,
-            dest,
             blockId,
             transactionId,
-            assetCode,
-            amount,
-            memo == NULL ? "" : memo,
-            fee == NULL ? "" : fee,
+            milecsa::assets::TokenFromCode(assetCode),
+            fee,
             __error_handler)) {
 
 
@@ -160,11 +171,18 @@ static PyObject* py_create_transaction_register_node(PyObject *self, PyObject *a
     char *pk;
     char *private_key;
     int  assetCode;
-    char *amount;
+    float amount;
     uint256_t blockId;
     uint64_t transactionId;
 
-    if (!PyArg_ParseTuple(args, "sssKKis", &pk, &private_key, &nodeAddress, &blockId, &transactionId, &assetCode, &amount)) {
+    if (!PyArg_ParseTuple(args, "sssKKif",
+                            &pk,
+                            &private_key,
+                             &nodeAddress,
+                             &blockId,
+                             &transactionId,
+                             &assetCode,
+                             &amount)) {
       PyErr_SetString(PyErr_MileCsaError, "not enough args");
       return NULL;
     }
@@ -183,7 +201,7 @@ static PyObject* py_create_transaction_register_node(PyObject *self, PyObject *a
             nodeAddress,
             blockId,
             transactionId,
-            assetCode,
+            milecsa::assets::TokenFromCode(assetCode),
             amount,
             __error_handler)) {
 

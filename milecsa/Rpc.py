@@ -38,7 +38,9 @@ class Rpc:
         }
 
         if Config.useBalancing and not Rpc.__urls__:
-            Rpc.__urls__ = requests.get(Config.nodesUrl()).json()
+            Rpc.__urls__ = requests.get(Config.nodesUrl(),
+                                        verify=Config.sslVerification,
+                                        timeout=Config.connectionTimeout).json()
 
     @staticmethod
     def get_url():

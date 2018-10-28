@@ -89,7 +89,7 @@ milecsa_api = CMakeExtension('milecsa_cpp')
 
 setup(
     name='milecsa',
-    version='1.0',
+    version='1.1',
     description='MileCsa API',
     ext_modules=[
         milecsa_api,
@@ -106,8 +106,9 @@ include_dirs = [
     '/usr/include',
     '/usr/local/include',
     './src/mile-csa-api/include',
-    './src/mile-csa-api/vendor/crypto',
-    './src/mile-csa-api/vendor/ed25519/src',
+    './src/mile-csa-api/vendor/mile-crypto/include',
+    './src/mile-csa-api/vendor/mile-crypto/src/private_include',
+    './src/mile-csa-api/vendor/mile-crypto/src/ed25519/include',
     './src/mile-csa-api/vendor/nlohmann'
 ]
 
@@ -131,7 +132,7 @@ milecsa_module = Extension(
 
 setup(
     name='milecsa',
-    version='0.6.0',
+    version='0.7.0',
     author="Lotus Mile",
     license="MIT",
     description='Python Package Mile C Extension',

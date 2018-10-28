@@ -2,13 +2,12 @@ import unittest
 from milecsa.Shared import Shared
 from milecsa.Wallet import Wallet
 from milecsa import Config
+import local_config
 
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
 
-        Config.url = "http://node002.testnet.mile.global"
-        Config.useBalancing = False
 
         phrase = "Some secret phrase"
         pk = Wallet(phrase=phrase)
