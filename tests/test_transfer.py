@@ -1,35 +1,29 @@
 import unittest, time
 from milecsa.Wallet import Wallet
 from milecsa.Config import Config
-
+import local_config
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
 
-        Config.sslVerification = False
-        Config.connectionTimeout = 30
-
-        Config.url = "http://node002.testnet.mile.global"
-        Config.useBalancing = False
-        Config.rpcDebug = True
 
         #
         # Put your address
         #
-        src = Wallet(private_key="...")
+        src = Wallet(phrase="secret-phrase")
 
         print(src.publicKey, src.privateKey)
 
         #
         # Put your address
         #
-        dst = Wallet(public_key="...")
+        dst = Wallet(phrase="destination-secret-phrase")
 
-        result = src.transfer(dest=dst, asset_code=0, amount=10.1, description="back my money!")
+        result = src.transfer(dest=dst, asset_code=0, amount=0.1, description="back my money!")
 
         self.assertFalse(not result)
 
-        time.sleep(60)
+        time.sleep(21)
 
         state = dst.get_state()
         for b in state.balances:

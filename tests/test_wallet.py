@@ -1,18 +1,14 @@
 import unittest
 from milecsa.Wallet import Wallet
 from milecsa.Config import Config
+import local_config
 
 
 class MyTestCase(unittest.TestCase):
+
     def test_something(self):
 
-        Config.sslVerification = False
-        Config.connectionTimeout = 30
-        Config.url = "http://node002.testnet.mile.global"
-        Config.useBalancing = False
-        Config.rpcDebug = True
-
-        wallet0 = Wallet(phrase="Some secrete phrase")
+        wallet0 = Wallet(phrase="secret-phrase")
 
         print()
         print(wallet0.publicKey, wallet0.privateKey)
@@ -20,7 +16,7 @@ class MyTestCase(unittest.TestCase):
         #
         # Put your address
         #
-        wallet1 = Wallet(public_key="...")
+        wallet1 = Wallet(phrase="destination-secret-phrase")
 
         state = wallet0.get_state()
         print()
@@ -39,7 +35,7 @@ class MyTestCase(unittest.TestCase):
         #
         # Put your address
         #
-        wallet2 = Wallet(public_key="...")
+        wallet2 = Wallet(phrase="destination-secret-phrase")
         trx = wallet2.get_transations()
         for t in trx:
             asset = wallet2.get_chain().asset_name(t.assetCode)

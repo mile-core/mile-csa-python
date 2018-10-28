@@ -36,7 +36,6 @@ class Config(Constant):
 
         self.Shared = self.Shared(self)
 
-
     def nodesUrl(self):
         return self.api() + "/v" + self.version + "/nodes.json"
 
