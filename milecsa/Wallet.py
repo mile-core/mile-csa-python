@@ -7,7 +7,7 @@ from milecsa.Rpc import Rpc
 from milecsa.Chain import Chain
 from milecsa.Shared import Shared
 from milecsa.TransactionParser import TransactionParser
-
+import milecsa
 
 class Asset:
 
@@ -120,28 +120,20 @@ class Wallet:
         elif type(dest) is type(""):
             destination = dest
 
-        trx = Transfer(src=self,
-                       dest=destination,
-                       asset_code=asset_code,
-                       amount=amount,
-                       description=description,
-                       fee=fee)
+        trx =  milecsa.Transfer(src=self,
+                                dest=destination,
+                                asset_code=asset_code,
+                                amount=amount,
+                                fee=fee,
+                                description = description)
 
         return trx.send()
 
-    def emission(self, dest, asset_code, amount, description=None, fee=None):
+    def emission(self, asset_code, fee=None):
 
-        if type(dest) is Wallet:
-            destination = dest.publicKey
-        elif type(dest) is type(""):
-            destination = dest
-
-        trx = Emission(src=self,
-                       dest=destination,
-                       asset_code=asset_code,
-                       amount=amount,
-                       description=description,
-                       fee=fee)
+        trx = milecsa.Emission(src=self,
+                               asset_code=asset_code,
+                               fee=fee)
 
         return trx.send()
 

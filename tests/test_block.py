@@ -1,5 +1,6 @@
 import unittest
 from milecsa import Chain, Config
+import local_config
 
 
 def print_block(chain, block):
@@ -16,10 +17,6 @@ def print_block(chain, block):
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
-
-        Config.url = "http://node002.testnet.mile.global"
-        Config.useBalancing = False
-        Config.rpcDebug = False
 
         chain = Chain()
 

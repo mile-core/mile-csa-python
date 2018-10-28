@@ -3,14 +3,13 @@ from milecsa import Wallet, Config
 
 def main():
 
-    Config.url = "http://node002.testnet.mile.global"
-    Config.useBalancing = False
+    Config.url = "http://wallet.testnet.mile.global"
 
     wallet0 = Wallet()
 
-    wallet1 = Wallet(phrase="Some phrase")
+    wallet1 = Wallet(phrase="secret-phrase")
 
-    wallet2 = Wallet(phrase="Some phrase")
+    wallet2 = Wallet(phrase="secret-phrase")
 
     wallet3 = Wallet(public_key=wallet0.publicKey, private_key=wallet0.privateKey)
 

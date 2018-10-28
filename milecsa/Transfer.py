@@ -6,12 +6,16 @@ import json
 
 class BaseTransfer(Transaction):
 
-    def __init__(self, src, dest, asset_code, amount, description=None, fee=None, trxid=None):
+    def __init__(self, src, asset_code, amount=0.0, dest=None, description=None, fee=0.0, trxid=None):
 
         Transaction.__init__(self, wallet=src, trxid=trxid)
 
         self.assetCode = int(asset_code)
-        self.amount = str(amount)
+
+        if amount:
+            self.amount = float(amount)
+        else:
+            self.amount = None
 
         if type(dest) is Wallet:
             self.destination = dest.publicKey
@@ -24,7 +28,11 @@ class BaseTransfer(Transaction):
             self.source = src
 
         self.description = description
-        self.fee = fee
+
+        if fee:
+            self.fee = float(fee)
+        else:
+            self.fee = float(0)
 
 
 class Transfer(BaseTransfer):
@@ -37,6 +45,6 @@ class Transfer(BaseTransfer):
                                  self.trxid,
                                  self.assetCode,
                                  self.amount,
-                                 self.description,
-                                 self.fee)
+                                 self.fee,
+                                 self.description)
         self.data = json.loads(__data)

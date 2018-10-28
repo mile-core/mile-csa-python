@@ -1,12 +1,11 @@
 import unittest
 from milecsa import Rpc, Config
+import local_config
 
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
 
-        Config.url = "http://node002.testnet.mile.global"
-        Config.useBalancing = False
 
         req0 = Rpc("get-blockchain-info", params={})
         req1 = Rpc("get-blockchain-info", params={})

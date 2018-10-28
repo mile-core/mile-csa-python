@@ -23,11 +23,16 @@ def main():
     #
     # Set your full node url
     #
-    Config.url = "http://node002.testnet.mile.global"
+    Config.url = "https://wallet.testnet.mile.global"
     #
-    # Disable client balancing
+    # Enable client balancing
     #
-    Config.useBalancing = False
+    Config.useBalancing = True
+
+    #
+    # Enable debug printing
+    #
+    Config.rpcDebug = True
 
     # Open chain
     chain = Chain()

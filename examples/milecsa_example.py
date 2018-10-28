@@ -48,9 +48,9 @@ def main():
                                         0,    # block id
                                         1,    # trx id
                                         0,    # asset code
-                                        "20",  # amount
-                                        None,
-                                        None    # fee
+                                        20,   # amount
+                                        0.0,  # fee
+                                        None  # memo
                                         ))
 
         print()
@@ -58,13 +58,10 @@ def main():
         print("4. Create signed emission transaction")
         print(milecsa.__emission(pk1['public-key'],
                                         pk1['private-key'],
-                                        pk3["public-key"],
                                         0,  # block id
                                         1,  # trx id
                                         0,  # asset code
-                                        "20",  # amount
-                                        None,
-                                        None  # fee
+                                        0   # fee
                                         ))
 
         print()
@@ -76,7 +73,7 @@ def main():
                                       0,      # block id
                                       0,      # trx id
                                       0,      # asset code
-                                      "10"    # amount
+                                      10      # amount
                                       ))
 
         print()
