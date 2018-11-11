@@ -16,46 +16,46 @@ auto __error_handler = [](milecsa::result code, const std::string &error) mutabl
 };
 
 
-static optional<map<string, string>> py_generate_key_pair()
+static map<string, string> pairMap(const milecsa::keys::Pair& pair)
 {
-    if (auto pair = milecsa::keys::Pair::Random(__error_handler))
-    {
-        return {{
-            {"public-key", pair->get_public_key().encode()},
-            {"private-key", pair->get_private_key().encode()},
-        }};
-    }
-    else {
-        return {};
-    }
+    return {
+        {"public-key", pair.get_public_key().encode()},
+        {"private-key", pair.get_private_key().encode()},
+    };
 }
 
 
-static optional<map<string, string>> py_generate_key_pair_with_secret_phrase(const string& phrase)
+static map<string, string> py_generate_key_pair()
 {
+    auto pair = milecsa::keys::Pair::Random(__error_handler);
+    if (!pair) {
+        throw std::runtime_error("Key pair generation error");
+    }
 
-    if (auto pair = milecsa::keys::Pair::WithSecret(phrase, __error_handler))
-    {
-        return {{
-            {"public-key", pair->get_public_key().encode()},
-            {"private-key", pair->get_private_key().encode()},
-        }};
-    }
-    else {
-        return {};
-    }
+    return pairMap(*pair);
 }
 
 
-static optional<map<string, string>> py_generate_key_pair_from_private_key(const string& private_key) {
-    if (auto pair = milecsa::keys::Pair::FromPrivateKey(private_key, __error_handler)) {
-        return {{
-            {"public-key", pair->get_public_key().encode()},
-            {"private-key", pair->get_private_key().encode()},
-        }};
-    } else {
-        return {};
+static map<string, string> py_generate_key_pair_with_secret_phrase(const string& phrase)
+{
+    auto pair = milecsa::keys::Pair::WithSecret(phrase, __error_handler);
+    if (!pair)
+    {
+        throw std::runtime_error("Key pair generation error");
     }
+
+    return pairMap(*pair);
+}
+
+
+static map<string, string> py_generate_key_pair_from_private_key(const string& private_key)
+{
+    auto pair = milecsa::keys::Pair::FromPrivateKey(private_key, __error_handler);
+    if (!pair) {
+        throw std::runtime_error("Key pair generation error");
+    }
+
+    return pairMap(*pair);
 }
 
 
@@ -73,7 +73,7 @@ static milecsa::keys::Pair requireKeyPair(const string& private_key, const strin
 }
 
 
-static optional<string> py_create_transaction_transfer_assets(
+static string py_create_transaction_transfer_assets(
     const string& public_key,
     const string& private_key,
     const string& destination_public_key,
@@ -85,26 +85,27 @@ static optional<string> py_create_transaction_transfer_assets(
     const string& memo
 ) {
     auto pair = requireKeyPair(private_key, public_key);
+    auto request = milecsa::transaction::Transfer<nlohmann::json>::CreateRequest(
+        pair,
+        destination_public_key,
+        block_id,
+        transaction_id,
+        milecsa::assets::TokenFromCode(asset_code),
+        amount,
+        fee,
+        memo,
+        __error_handler
+    );
 
-    if (auto request = milecsa::transaction::Transfer<nlohmann::json>::CreateRequest(
-            pair,
-            destination_public_key,
-            block_id,
-            transaction_id,
-            milecsa::assets::TokenFromCode(asset_code),
-            amount,
-            fee,
-            memo,
-            __error_handler)) {
-
-        return {request->get_body()->dump()};
+    if (!request) {
+        throw std::runtime_error("Failed to create transaction");
     }
 
-    return {};
+    return {request->get_body()->dump()};
 }
 
 
-static optional<string> py_create_transaction_emission(
+static string py_create_transaction_emission(
     const string& public_key,
     const string& private_key,
     uint64_t block_id, //todo uint256_t
@@ -113,23 +114,23 @@ static optional<string> py_create_transaction_emission(
     float fee
 ) {
     auto pair = requireKeyPair(private_key, public_key);
-
-    if (auto request = milecsa::transaction::Emission<nlohmann::json>::CreateRequest(
-            pair,
-            block_id,
-            transaction_id,
-            milecsa::assets::TokenFromCode(asset_code),
-            fee,
-            __error_handler)) {
-
-        return {request->get_body()->dump()};
+    auto request = milecsa::transaction::Emission<nlohmann::json>::CreateRequest(
+        pair,
+        block_id,
+        transaction_id,
+        milecsa::assets::TokenFromCode(asset_code),
+        fee,
+        __error_handler
+    );
+    if (!request) {
+        throw std::runtime_error("Failed to create transaction");
     }
 
-    return {};
+    return {request->get_body()->dump()};
 }
 
 
-static optional<string> py_create_transaction_register_node(
+static string py_create_transaction_register_node(
     const string& public_key,
     const string& private_key,
     const string& node_address,
@@ -139,24 +140,24 @@ static optional<string> py_create_transaction_register_node(
     float amount
 ) {
     auto pair = requireKeyPair(private_key, public_key);
-
-    if (auto request = milecsa::transaction::Node<nlohmann::json>::CreateRegisterRequest(
-            pair,
-            node_address,
-            block_id,
-            transaction_id,
-            milecsa::assets::TokenFromCode(asset_code),
-            amount,
-            __error_handler)) {
-
-        return {request->get_body()->dump()};
+    auto request = milecsa::transaction::Node<nlohmann::json>::CreateRegisterRequest(
+        pair,
+        node_address,
+        block_id,
+        transaction_id,
+        milecsa::assets::TokenFromCode(asset_code),
+        amount,
+        __error_handler
+    );
+    if (!request) {
+        throw std::runtime_error("Failed to create transaction");
     }
 
-    return {};
+    return {request->get_body()->dump()};
 }
 
 
-static optional<string> py_create_transaction_unregister_node(
+static string py_create_transaction_unregister_node(
     const string& public_key,
     const string& private_key,
     const string& node_address,
@@ -164,16 +165,16 @@ static optional<string> py_create_transaction_unregister_node(
     uint64_t transaction_id
 ) {
     auto pair = requireKeyPair(private_key, public_key);
-
-    if (auto request = milecsa::transaction::Node<nlohmann::json>::CreateUnregisterRequest(
-            pair,
-            node_address,
-            block_id,
-            transaction_id,
-            __error_handler)) {
-
-        return {request->get_body()->dump()};
+    auto request = milecsa::transaction::Node<nlohmann::json>::CreateUnregisterRequest(
+        pair,
+        node_address,
+        block_id,
+        transaction_id,
+        __error_handler
+    );
+    if (!request) {
+        throw std::runtime_error("Failed to create transaction");
     }
 
-    return {};
+    return {request->get_body()->dump()};
 }
