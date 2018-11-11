@@ -98,7 +98,7 @@ class Wallet:
             amount = b['amount']
             balances.append(Balance(asset=Asset(asset_name, asset_code), amount=amount))
 
-        trxid = int(response.result['last-transaction-id'])
+        trxid = int(response.result['preferred-transaction-id'])
         return Wallet.State(balances=balances,
                             last_transaction_id=trxid)
 

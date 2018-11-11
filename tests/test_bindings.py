@@ -77,7 +77,7 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(pair2['public-key'], res.get('to'))
         self.assertEqual(str(2**64-1), res.get('block-id'))
         self.assertEqual(1, res.get('transaction-id'))
-        self.assertEqual('TransferAssetsTransaction', res.get('transaction-name'))
+        self.assertEqual('TransferAssetsTransaction', res.get('transaction-type'))
 
         # runs without memo
         res = transfer_assets(
@@ -108,7 +108,7 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(pair['public-key'], res.get('from'))
         self.assertEqual(str(2**64-1), res.get('block-id'))
         self.assertEqual(1, res.get('transaction-id'))
-        self.assertEqual('EmissionTransaction', res.get('transaction-name'))
+        self.assertEqual('EmissionTransaction', res.get('transaction-type'))
 
     def test_register_node(self):
         pair = key_pair_with_secret_phrase("secret-phrase")
@@ -127,7 +127,7 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(pair['public-key'], res.get('public-key'))
         self.assertEqual(str(2**64-1), res.get('block-id'))
         self.assertEqual(1, res.get('transaction-id'))
-        self.assertEqual('RegisterNodeTransactionWithAmount', res.get('transaction-name'))
+        self.assertEqual('RegisterNodeTransactionWithAmount', res.get('transaction-type'))
 
     def test_unregister_node(self):
         pair = key_pair_with_secret_phrase("secret-phrase")
@@ -143,7 +143,7 @@ class TestBindings(unittest.TestCase):
         self.assertEqual(pair['public-key'], res.get('public-key'))
         self.assertEqual(str(2**64-1), res.get('block-id'))
         self.assertEqual(1, res.get('transaction-id'))
-        self.assertEqual('UnregisterNodeTransaction', res.get('transaction-name'))
+        self.assertEqual('UnregisterNodeTransaction', res.get('transaction-type'))
 
     def _validate_pair(self, pair):
         self.assertIs(type(pair), dict)
