@@ -73,7 +73,7 @@ static milecsa::keys::Pair requireKeyPair(const string& private_key, const strin
 }
 
 
-static string py_create_transaction_transfer_assets(
+static nlohmann::json py_create_transaction_transfer_assets(
     const string& public_key,
     const string& private_key,
     const string& destination_public_key,
@@ -101,11 +101,11 @@ static string py_create_transaction_transfer_assets(
         throw std::runtime_error("Failed to create transaction");
     }
 
-    return {request->get_body()->dump()};
+    return *request->get_body();
 }
 
 
-static string py_create_transaction_emission(
+static nlohmann::json py_create_transaction_emission(
     const string& public_key,
     const string& private_key,
     uint64_t block_id, //todo uint256_t
@@ -126,11 +126,11 @@ static string py_create_transaction_emission(
         throw std::runtime_error("Failed to create transaction");
     }
 
-    return {request->get_body()->dump()};
+    return *request->get_body();
 }
 
 
-static string py_create_transaction_register_node(
+static nlohmann::json py_create_transaction_register_node(
     const string& public_key,
     const string& private_key,
     const string& node_address,
@@ -153,11 +153,11 @@ static string py_create_transaction_register_node(
         throw std::runtime_error("Failed to create transaction");
     }
 
-    return {request->get_body()->dump()};
+    return *request->get_body();
 }
 
 
-static string py_create_transaction_unregister_node(
+static nlohmann::json py_create_transaction_unregister_node(
     const string& public_key,
     const string& private_key,
     const string& node_address,
@@ -176,5 +176,5 @@ static string py_create_transaction_unregister_node(
         throw std::runtime_error("Failed to create transaction");
     }
 
-    return {request->get_body()->dump()};
+    return *request->get_body();
 }

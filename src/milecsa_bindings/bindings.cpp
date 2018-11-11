@@ -2,6 +2,7 @@
 #include <pybind11/stl.h>
 #include <stdio.h>
 #include "wrappers.cpp"
+#include "json_caster.cpp"
 
 namespace py = pybind11;
 

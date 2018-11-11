@@ -56,7 +56,7 @@ class TestBindings(unittest.TestCase):
         pair1 = key_pair_with_secret_phrase("secret-phrase")
         pair2 = key_pair_with_secret_phrase("destination-secret-phrase")
 
-        res_str = transfer_assets(
+        res = transfer_assets(
             pair1['public-key'],
             pair1['private-key'],
             pair2['public-key'],
@@ -67,8 +67,6 @@ class TestBindings(unittest.TestCase):
             0.1+0.2,
             "22memo"
         )
-        self.assertIs(type(res_str), str)
-        res = json.loads(res_str)
         self.assertIs(type(res), dict)
 
         self.assertEqual('29.00000', res.get('asset', {}).get('amount', ''))
@@ -82,7 +80,7 @@ class TestBindings(unittest.TestCase):
         self.assertEqual('TransferAssetsTransaction', res.get('transaction-name'))
 
         # runs without memo
-        res_str = transfer_assets(
+        res = transfer_assets(
             pair1['public-key'],
             pair1['private-key'],
             pair2['public-key'],
@@ -92,21 +90,17 @@ class TestBindings(unittest.TestCase):
             0.29 * 100,
             0.1 + 0.2
         )
-        self.assertIs(type(res_str), str)
-        res = json.loads(res_str)
         self.assertIs(type(res), dict)
         self.assertEqual("", res.get('description'))
 
     def test_emission(self):
         pair = key_pair_with_secret_phrase("secret-phrase")
 
-        res_str = emission(
+        res = emission(
             pair['public-key'], pair['private-key'],
             2**64-1, 1,
             1, 0.1+0.2
         )
-        self.assertIs(type(res_str), str)
-        res = json.loads(res_str)
         self.assertIs(type(res), dict)
 
         self.assertEqual(1, res.get('asset', {}).get('code'))
@@ -119,14 +113,12 @@ class TestBindings(unittest.TestCase):
     def test_register_node(self):
         pair = key_pair_with_secret_phrase("secret-phrase")
 
-        res_str = register_node(
+        res = register_node(
             pair['public-key'], pair['private-key'],
             '127.0.0.2',
             2**64-1, 1,
             1, 0.1+0.2
         )
-        self.assertIs(type(res_str), str)
-        res = json.loads(res_str)
         self.assertIs(type(res), dict)
 
         self.assertEqual('127.0.0.2', res.get('address'))
@@ -140,13 +132,11 @@ class TestBindings(unittest.TestCase):
     def test_unregister_node(self):
         pair = key_pair_with_secret_phrase("secret-phrase")
 
-        res_str = unregister_node(
+        res = unregister_node(
             pair['public-key'], pair['private-key'],
             '127.0.0.2',
             2**64-1, 1
         )
-        self.assertIs(type(res_str), str)
-        res = json.loads(res_str)
         self.assertIs(type(res), dict)
 
         # todo self.assertEqual('127.0.0.2', res.get('address'))
