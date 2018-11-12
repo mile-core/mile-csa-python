@@ -132,7 +132,7 @@ milecsa_module = Extension(
 
 setup(
     name='milecsa',
-    version='0.7.0',
+    version='0.7.1',
     author="Lotus Mile",
     license="MIT",
     description='Python Package Mile C Extension',
