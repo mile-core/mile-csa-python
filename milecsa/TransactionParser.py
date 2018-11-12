@@ -5,7 +5,7 @@ class TransactionParser:
 
     def __init__(self, json_data):
         self.transactions = []
-        trx_type = json_data['transaction-name']
+        trx_type = json_data['transaction-type']
 
         if trx_type in ['TransferAssetsTransaction', 'EmissionTransaction']:
 
