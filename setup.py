@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = '0.7.1'
+__version__ = '0.7.2'
 __milecsa_api_version__ = '1.1.0'
 
 
