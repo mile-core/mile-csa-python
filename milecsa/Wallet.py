@@ -45,9 +45,9 @@ class Wallet:
 
         def get_balance(self, name=None, code=None):
             if name:
-                x = [x for x in self.balances if x.name == name]
+                x = [x for x in self.balances if x.asset.name == name]
             elif code:
-                x = [x for x in self.balances if x.code == code]
+                x = [x for x in self.balances if x.asset.code == code]
             return x
 
     publicKey = None
