@@ -9,6 +9,8 @@ from setuptools.command.build_ext import build_ext
 __version__ = '0.7.2'
 __milecsa_api_version__ = '1.1.0'
 
+darwin_flags = ['-mmacosx-version-min=10.12']
+
 
 class ExtensionWithLibrariesFromSources(Extension):
     """Win is unsupported"""
@@ -16,7 +18,7 @@ class ExtensionWithLibrariesFromSources(Extension):
         self.libraries_from_sources = kw.pop('libraries_from_sources', [])
 
         if platform.system() == 'Darwin':
-            kw['extra_link_args'] = kw.get('extra_link_args', []) + ['-stdlib=libc++', '-mmacosx-version-min=10.7']
+            kw['extra_link_args'] = kw.get('extra_link_args', []) + darwin_flags
             kw['include_dirs'] = kw.get('include_dirs', []) + [
                 '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1'
             ]
@@ -86,6 +88,11 @@ class BuildExt(build_ext):
         super().build_extension(ext)
 
 
+extra_compile_args = ['-std=c++17', '-DVERSION_INFO="{}"'.format(__version__)]
+
+if platform.system() == 'Darwin':
+    extra_compile_args = extra_compile_args + darwin_flags
+
 ext_modules = [
     ExtensionWithLibrariesFromSources(
         '__milecsa',
@@ -102,7 +109,7 @@ ext_modules = [
             './src/mile-csa-api/vendor/nlohmann'
         ],
         language='c++',
-        extra_compile_args=['-std=c++17', '-DVERSION_INFO="{}"'.format(__version__)],
+        extra_compile_args=extra_compile_args,
         libraries_from_sources=[
             ('milecsa', './src/mile-csa-api', __milecsa_api_version__),
         ]
