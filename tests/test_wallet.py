@@ -1,7 +1,7 @@
 import unittest
 from milecsa.Wallet import Wallet
 from milecsa.Config import Config
-import local_config
+from .local_config import *
 
 
 class MyTestCase(unittest.TestCase):

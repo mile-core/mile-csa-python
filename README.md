@@ -16,11 +16,19 @@
 
 # Build & Install
 
+## Global
+
     $ git clone https://github.com/mile-core/mile-csa-python
     $ cd mile-csa-python
     $ git submodule update --init --recursive --remote
     $ python3 ./setup.py build
     $ sudo python3 ./setup.py install
+
+## In virtual environment via pipenv
+
+    $ pipenv install -e git+https://github.com/mile-core/mile-csa-python@master#egg=milecsa
+
+Also you can use specific version: just replace master with target version
     
 # Boost updates (if it needs)
 
@@ -31,12 +39,12 @@
     $ ./b2 install --prefix=/usr --with=all -j4
         
     
-#Test 
+# Test
 
-    $ python3 ./tests/module_test.py
+    $ python3 -m unittest discover tests
      
      
-#Examples
+# Examples
 
 **Global configuration**
 ```python

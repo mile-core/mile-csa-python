@@ -1,7 +1,6 @@
 from __milecsa import __transfer_assets as transfer_assets
 from .Wallet import Wallet
 from .Transaction import Transaction
-import json
 
 
 class BaseTransfer(Transaction):
@@ -38,13 +37,12 @@ class BaseTransfer(Transaction):
 class Transfer(BaseTransfer):
 
     def build(self):
-        __data = transfer_assets(self.wallet.publicKey,
-                                 self.wallet.privateKey,
-                                 self.destination,
-                                 self.blockid,
-                                 self.trxid,
-                                 self.assetCode,
-                                 self.amount,
-                                 self.fee,
-                                 self.description)
-        self.data = json.loads(__data)
+        self.data = transfer_assets(self.wallet.publicKey,
+                                    self.wallet.privateKey,
+                                    self.destination,
+                                    self.blockid,
+                                    self.trxid,
+                                    self.assetCode,
+                                    self.amount,
+                                    self.fee,
+                                    self.description)
