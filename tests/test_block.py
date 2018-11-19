@@ -1,6 +1,6 @@
 import unittest
 from milecsa import Chain, Config
-import local_config
+from .local_config import *
 
 
 def print_block(chain, block):

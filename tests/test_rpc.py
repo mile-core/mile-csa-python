@@ -1,6 +1,6 @@
 import unittest
 from milecsa import Rpc, Config
-import local_config
+from .local_config import *
 
 
 class MyTestCase(unittest.TestCase):

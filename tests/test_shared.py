@@ -2,8 +2,7 @@ import unittest
 from milecsa.Shared import Shared
 from milecsa.Wallet import Wallet
 from milecsa import Config
-import local_config
-
+from .local_config import *
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
