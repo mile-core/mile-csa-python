@@ -4,11 +4,8 @@ from milecsa import Config
 
 
 class MyTestCase(unittest.TestCase):
+
     def test_something(self):
-
-        Config.url = "http://node002.testnet.mile.global"
-        Config.useBalancing = False
-
         try:
             Config.appSchema = ""
         except Config.ConstantError as error:

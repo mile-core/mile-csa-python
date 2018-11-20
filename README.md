@@ -41,7 +41,7 @@ Also you can use specific version: just replace master with target version
     
 # Test
 
-    $ python3 -m unittest discover tests
+    $ python3 -m unittest
      
      
 # Examples
