@@ -7,7 +7,8 @@ from __milecsa import __key_pair as key_pair, \
     __transfer_assets as transfer_assets, \
     __emission as emission, \
     __register_node as register_node, \
-    __unregister_node as unregister_node
+    __unregister_node as unregister_node,\
+    __post_token_rate as post_token_rate
 
 class TestBindings(unittest.TestCase):
     def test_keypair(self):
@@ -115,15 +116,16 @@ class TestBindings(unittest.TestCase):
 
         res = register_node(
             pair['public-key'], pair['private-key'],
-            '127.0.0.2',
-            2**64-1, 1,
-            1, 0.1+0.2
+            node_address='127.0.0.2',
+            block_id=2**64-1, transaction_id=1,
+            amount=0.1+0.2, fee=0.01
         )
         self.assertIs(type(res), dict)
 
         self.assertEqual('127.0.0.2', res.get('address'))
-        self.assertEqual(1, res.get('asset', {}).get('code'))
-        self.assertEqual('0.30000', res.get('asset', {}).get('amount'))
+        self.assertEqual(0, res.get('asset', {}).get('code'))
+        self.assertEqual('0.30', res.get('asset', {}).get('amount'))
+        self.assertEqual('0.01', res.get('fee'))
         self.assertEqual(pair['public-key'], res.get('public-key'))
         self.assertEqual(str(2**64-1), res.get('block-id'))
         self.assertEqual(1, res.get('transaction-id'))
@@ -134,16 +136,34 @@ class TestBindings(unittest.TestCase):
 
         res = unregister_node(
             pair['public-key'], pair['private-key'],
-            '127.0.0.2',
-            2**64-1, 1
+            block_id=2 ** 64 - 1, transaction_id=1,
+            fee=0.01
         )
         self.assertIs(type(res), dict)
 
-        # todo self.assertEqual('127.0.0.2', res.get('address'))
         self.assertEqual(pair['public-key'], res.get('public-key'))
         self.assertEqual(str(2**64-1), res.get('block-id'))
         self.assertEqual(1, res.get('transaction-id'))
+        self.assertEqual('0.01', res.get('fee'))
         self.assertEqual('UnregisterNodeTransaction', res.get('transaction-type'))
+
+    def test_post_token_rate(self):
+        pair = key_pair_with_secret_phrase("secret-phrase")
+
+        res = post_token_rate(
+            pair['public-key'], pair['private-key'],
+            block_id=2 ** 64 - 1, transaction_id=1,
+            rate=1.45, fee=0.01
+        )
+        self.assertIs(type(res), dict)
+
+        self.assertEqual(pair['public-key'], res.get('public-key'))
+        self.assertEqual(str(2**64-1), res.get('block-id'))
+        self.assertEqual(1, res.get('transaction-id'))
+        self.assertEqual('1.45', res.get('asset', {}).get('amount'))
+        self.assertEqual(0, res.get('asset', {}).get('code'))
+        self.assertEqual('0.01', res.get('fee'))
+        self.assertEqual('PostTokenRate', res.get('transaction-type'))
 
     def _validate_pair(self, pair):
         self.assertIs(type(pair), dict)
