@@ -26,7 +26,10 @@ class BaseTransfer(Transaction):
         else:
             self.source = src
 
-        self.description = description
+        if description is None:
+            self.description = ""
+        else:
+            self.description = description
 
         if fee:
             self.fee = float(fee)
