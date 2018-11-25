@@ -4,11 +4,8 @@ from milecsa import config
 
 
 class MyTestCase(unittest.TestCase):
+
     def test_something(self):
-
-        config.url = "https://wallet.testnet.mile.global"
-        config.useBalancing = False
-
         try:
             config.appSchema = ""
         except config.ConstantError as error:

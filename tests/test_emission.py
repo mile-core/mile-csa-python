@@ -1,7 +1,6 @@
 import unittest, time
 from milecsa import Wallet
-import local_config
-
+from .local_config import *
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
