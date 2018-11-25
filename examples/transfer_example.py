@@ -1,17 +1,17 @@
-from milecsa import Transfer, Wallet, Config
+from milecsa import Transfer, Wallet, config
 import time
 
 
 def main():
 
-    Config.url = "https://wallet.testnet.mile.global"
+    config.url = "https://wallet.testnet.mile.global"
 
     src = Wallet(phrase="Some WTF!? secret phrase")
-    print(src.publicKey, src.privateKey)
+    print(src.public_key, src.private_key)
 
     dst = Wallet()
 
-    dst_public_key = Wallet().publicKey
+    dst_public_key = Wallet().public_key
 
     state = src.get_state()
 
@@ -26,7 +26,7 @@ def main():
     #
     src = Wallet(phrase="secret-phrase")
 
-    print(src.publicKey, src.privateKey)
+    print(src.public_key, src.private_key)
 
     #
     # Put your address and

@@ -1,6 +1,6 @@
-from milecsa.Rpc import Rpc
-from milecsa.Config import Config
-from milecsa.TransactionParser import TransactionParser
+from .config import config
+from .rpc import Rpc
+from .transaction_parser import TransactionParser
 
 
 class Block:
@@ -8,6 +8,7 @@ class Block:
     __rpc__ = None
 
     def __init__(self, block_id):
+        # todo lazy
         self.blockId = block_id
         rpc = Rpc("get-block-by-id", params={"id": self.blockId})
         result = rpc.exec().result
@@ -21,41 +22,38 @@ class Block:
             parser = TransactionParser(json_data=trx)
             self.transactions += parser.transactions
 
-        #
         #self.transaction_count = int(self.blockData['transaction-count'])
-        #
         self.transaction_count = len(self.transactions)
 
 
 class Chain:
 
     class State:
-
         def __init__(self):
             rpc = Rpc("get-blockchain-state", params={})
             result = rpc.exec().result
             self.block_count = int(result['block-count'])
             self.node_count = int(result['node-count'])
             self.pending_transaction_count = int(result['pending-transaction-count'])
-            #
+
             # TODO !!! voing ->> voting
-            #
             self.voting_transaction_count = int(result['voing-transaction-count'])
             self.transaction_count = 0
 
     __response__ = None
 
     def __init__(self):
-        if not Chain.__response__:
+        if not Chain.__response__:  # todo lazy
             rpc = Rpc("get-blockchain-info", params={})
             Chain.__response__ = rpc.exec()
         self.project = Chain.__response__.result['project']
         self.version = Chain.__response__.result['version']
         self.supported_transactions = Chain.__response__.result['supported-transaction-types']
         self.supported_assets = Chain.__response__.result['supported-assets']
-        self.asset_codes = dict(map(lambda a: (int(a['code']), a['name']), self.supported_assets))
-        self.asset_names = dict(map(lambda a: (a['name'], int(a['code'])), self.supported_assets))
-        if Config.rpcDebug:
+        self.asset_codes = {int(a['code']): a['name'] for a in self.supported_assets}
+        self.asset_names = {a['name']: int(a['code']) for a in self.supported_assets}
+
+        if config.rpcDebug:
             print("Supported assets: ", self.supported_assets)
             print("Asset codes: ", self.asset_codes)
             print("Asset names: ", self.asset_names)

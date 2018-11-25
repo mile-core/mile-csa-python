@@ -1,4 +1,4 @@
-from milecsa import Chain, Config
+from milecsa import Chain, config
 
 
 #
@@ -23,16 +23,16 @@ def main():
     #
     # Set your full node url
     #
-    Config.url = "https://wallet.testnet.mile.global"
+    config.url = "https://wallet.testnet.mile.global"
     #
     # Enable client balancing
     #
-    Config.useBalancing = True
+    config.useBalancing = True
 
     #
     # Enable debug printing
     #
-    Config.rpcDebug = True
+    config.rpcDebug = True
 
     # Open chain
     chain = Chain()

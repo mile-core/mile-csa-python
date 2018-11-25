@@ -1,5 +1,5 @@
 import unittest
-from milecsa import Chain, Config
+from milecsa import Chain
 import local_config
 
 

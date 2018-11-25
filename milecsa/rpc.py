@@ -1,7 +1,9 @@
-from milecsa.Config import Config
-import requests
 import json
+
+import requests
 import urllib3
+
+from .config import config
 
 urllib3.disable_warnings()
 
@@ -11,7 +13,7 @@ class Response:
     def __init__(self, result, id):
         self.result = result
         self.id = id
-        if Config.rpcDebug:
+        if config.rpcDebug:
             print("Rpc Response debug: ")
             print("Id: ", id)
             print("Response: ", result)
@@ -23,13 +25,12 @@ class Response:
 class Rpc:
 
     headers = {'content-type': 'application/json'}
-    __urls__ = None
-    __current__url__index__ = 0
+    __urls = None
+    __current_url_index = 0
+    __path = "/v" + config.version + "/api"
 
     def __init__(self, method, params):
-
         self.id = 0
-
         self.__payload = {
             "method": method,
             "params": params,
@@ -37,19 +38,21 @@ class Rpc:
             "id": self.id,
         }
 
-        if Config.useBalancing and not Rpc.__urls__:
-            Rpc.__urls__ = requests.get(Config.nodesUrl(),
-                                        verify=Config.sslVerification,
-                                        timeout=Config.connectionTimeout).json()
-
     @staticmethod
     def get_url():
-        target = "/v"+Config.version+"/api"
-        if Config.useBalancing:
-            Rpc.__current__url__index__ += 1
-            return Rpc.__urls__[Rpc.__current__url__index__ % len(Rpc.__urls__)]+target
+
+        if config.useBalancing:
+            if not Rpc.__urls:
+                Rpc.__urls = requests.get(
+                    config.web.nodes_urls(),
+                    verify=config.sslVerification,
+                    timeout=config.connectionTimeout
+                ).json()
+
+            Rpc.__current_url_index += 1
+            return Rpc.__urls[Rpc.__current_url_index % len(Rpc.__urls)] + Rpc.__path
         else:
-            return Config.url+target
+            return config.url + Rpc.__path
 
     def exec(self):
 
@@ -57,7 +60,7 @@ class Rpc:
         data = json.dumps(self.__payload)
         self.id += 1
 
-        if Config.rpcDebug:
+        if config.rpcDebug:
             print("Rpc exec debug: ")
             print(data)
 
@@ -65,13 +68,14 @@ class Rpc:
             self.get_url(),
             data=data,
             headers=self.headers,
-            timeout=Config.connectionTimeout,
-            verify=Config.sslVerification,
-            stream=False).json()
+            timeout=config.connectionTimeout,
+            verify=config.sslVerification,
+            stream=False
+        ).json()
 
         error = response.get('error', None)
         if error:
-            if Config.rpcDebug:
+            if config.rpcDebug:
                 print("Rpc error debug: ")
                 print(error)
             raise Exception(error['message'])

@@ -1,6 +1,5 @@
 import unittest
-from milecsa.Wallet import Wallet
-from milecsa.Config import Config
+from milecsa import Wallet
 import local_config
 
 
@@ -11,16 +10,11 @@ class MyTestCase(unittest.TestCase):
         wallet0 = Wallet(phrase="secret-phrase")
 
         print()
-        print(wallet0.publicKey, wallet0.privateKey)
-
-        #
-        # Put your address
-        #
-        wallet1 = Wallet(phrase="destination-secret-phrase")
+        print(wallet0.public_key, wallet0.private_key)
 
         state = wallet0.get_state()
         print()
-        print(state.balances, state.last_transaction_id, wallet0.publicKey)
+        print(state.balances, state.preferred_transaction_id, wallet0.public_key)
         for b in state.balances:
             print(b)
 
@@ -32,13 +26,9 @@ class MyTestCase(unittest.TestCase):
         print(wqr1)
         wqr1.save("./img-wqr1.png")
 
-        #
-        # Put your address
-        #
-        wallet2 = Wallet(phrase="destination-secret-phrase")
-        trx = wallet2.get_transations()
+        trx = wallet0.get_transactions()
         for t in trx:
-            asset = wallet2.get_chain().asset_name(t.assetCode)
+            asset = wallet0.get_chain().asset_name(t.assetCode)
             print(t, t.source, "->[", t.description, "]", t.destination, " asset: ", t.assetCode, asset, " amount: ", t.amount)
 
 
