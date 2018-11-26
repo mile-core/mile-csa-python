@@ -136,8 +136,8 @@ static nlohmann::json py_create_transaction_register_node(
     const string& node_address,
     uint64_t block_id, //todo uint256_t
     uint64_t transaction_id,
-    int asset_code,
-    float amount
+    float amount,
+    float fee
 ) {
     auto pair = requireKeyPair(private_key, public_key);
     auto request = milecsa::transaction::Node<nlohmann::json>::CreateRegisterRequest(
@@ -145,8 +145,8 @@ static nlohmann::json py_create_transaction_register_node(
         node_address,
         block_id,
         transaction_id,
-        milecsa::assets::TokenFromCode(asset_code),
         amount,
+        fee,
         __error_handler
     );
     if (!request) {
@@ -160,16 +160,41 @@ static nlohmann::json py_create_transaction_register_node(
 static nlohmann::json py_create_transaction_unregister_node(
     const string& public_key,
     const string& private_key,
-    const string& node_address,
     uint64_t block_id, //todo uint256_t
-    uint64_t transaction_id
+    uint64_t transaction_id,
+    float fee
 ) {
     auto pair = requireKeyPair(private_key, public_key);
     auto request = milecsa::transaction::Node<nlohmann::json>::CreateUnregisterRequest(
         pair,
-        node_address,
         block_id,
         transaction_id,
+        fee,
+        __error_handler
+    );
+    if (!request) {
+        throw std::runtime_error("Failed to create transaction");
+    }
+
+    return *request->get_body();
+}
+
+
+static nlohmann::json py_create_transaction_post_token_rate(
+    const string& public_key,
+    const string& private_key,
+    uint64_t block_id, //todo uint256_t
+    uint64_t transaction_id,
+    float rate,
+    float fee
+) {
+    auto pair = requireKeyPair(private_key, public_key);
+    auto request = milecsa::transaction::Vote<nlohmann::json>::CreateRequest(
+        pair,
+        block_id,
+        transaction_id,
+        rate,
+        fee,
         __error_handler
     );
     if (!request) {

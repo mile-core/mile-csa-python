@@ -43,7 +43,7 @@ PYBIND11_MODULE(__milecsa, m) {
         "transaction_id"_a,
         "asset_code"_a,
         "amount"_a,
-        "fee"_a,
+        "fee"_a = 0,
         "memo"_a = ""
     );
 
@@ -56,7 +56,7 @@ PYBIND11_MODULE(__milecsa, m) {
         "block_id"_a,
         "transaction_id"_a,
         "asset_code"_a,
-        "fee"_a
+        "fee"_a = 0
     );
 
     m.def(
@@ -68,8 +68,8 @@ PYBIND11_MODULE(__milecsa, m) {
         "node_address"_a,
         "block_id"_a,
         "transaction_id"_a,
-        "asset_code"_a,
-        "amount"_a
+        "amount"_a,
+        "fee"_a = 0
     );
 
     m.def(
@@ -78,8 +78,20 @@ PYBIND11_MODULE(__milecsa, m) {
         "Create unregister node transaction body",
         "public_key"_a,
         "private_key"_a,
-        "node_address"_a,
         "block_id"_a,
-        "transaction_id"_a
+        "transaction_id"_a,
+        "fee"_a = 0
+    );
+
+    m.def(
+        "__post_token_rate",
+        &py_create_transaction_post_token_rate,
+        "Create vote for rate transaction body",
+        "public_key"_a,
+        "private_key"_a,
+        "block_id"_a,
+        "transaction_id"_a,
+        "rate"_a,
+        "fee"_a = 0
     );
 }
