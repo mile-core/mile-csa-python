@@ -28,8 +28,8 @@ class MyTestCase(unittest.TestCase):
 
         trx = wallet0.get_transactions()
         for t in trx:
-            asset = wallet0.get_chain().asset_name(t.assetCode)
-            print(t, t.source, "->[", t.description, "]", t.destination, " asset: ", t.assetCode, asset, " amount: ", t.amount)
+            asset = wallet0.get_chain().asset_name(t.asset_code)
+            print(t.__class__.__name__, asset, t.__dict__)
 
 
 if __name__ == '__main__':

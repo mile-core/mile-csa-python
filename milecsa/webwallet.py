@@ -3,7 +3,7 @@ from urllib.parse import quote_plus
 import qrcode
 
 from .chain import Chain
-from .config import config # todo check
+from .config import config
 
 
 class WebWallet:

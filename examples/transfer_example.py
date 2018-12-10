@@ -4,7 +4,7 @@ import time
 
 def main():
 
-    config.url = "https://wallet.testnet.mile.global"
+    config.web.url = "https://wallet.testnet.mile.global"
 
     src = Wallet(phrase="Some WTF!? secret phrase")
     print(src.public_key, src.private_key)
@@ -22,14 +22,14 @@ def main():
     print(trx1.data)
 
     #
-    # Put your address and
+    # Put your address
     #
     src = Wallet(phrase="secret-phrase")
 
     print(src.public_key, src.private_key)
 
     #
-    # Put your address and
+    # Put your address
     #
     dst = Wallet(phrase="destination-secret-phrase")
 

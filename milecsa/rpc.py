@@ -38,21 +38,21 @@ class Rpc:
             "id": self.id,
         }
 
-    @staticmethod
-    def get_url():
+    @classmethod
+    def get_url(cls):
 
         if config.useBalancing:
-            if not Rpc.__urls:
-                Rpc.__urls = requests.get(
+            if not cls.__urls:
+                cls.__urls = requests.get(
                     config.web.nodes_urls(),
                     verify=config.sslVerification,
                     timeout=config.connectionTimeout
                 ).json()
 
-            Rpc.__current_url_index += 1
-            return Rpc.__urls[Rpc.__current_url_index % len(Rpc.__urls)] + Rpc.__path
+                cls.__current_url_index += 1
+            return cls.__urls[cls.__current_url_index % len(cls.__urls)] + cls.__path
         else:
-            return config.url + Rpc.__path
+            return config.url + cls.__path
 
     def exec(self):
 

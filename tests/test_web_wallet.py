@@ -1,6 +1,8 @@
 import unittest
+
 from milecsa import Wallet, WebWallet
-import local_config
+
+from .local_config import *
 
 
 class MyTestCase(unittest.TestCase):

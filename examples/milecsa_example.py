@@ -17,7 +17,7 @@ def main():
         pkp = pk['private-key']
         print(milecsa.__key_pair_from_private_key(pkp))
 
-    except milecsa.error as error:
+    except Exception as error:
         print(error)
 
 
@@ -33,7 +33,7 @@ def main():
 
         print(pk1, pk1 == pk2, pk1 == pk3)
 
-    except milecsa.error as error:
+    except Exception as error:
         print(error)
 
 
@@ -50,7 +50,7 @@ def main():
                                         0,    # asset code
                                         20,   # amount
                                         0.0,  # fee
-                                        None  # memo
+                                        ''  # memo
                                         ))
 
         print()
@@ -72,8 +72,8 @@ def main():
                                       "mile.global",  # node address
                                       0,      # block id
                                       0,      # trx id
-                                      0,      # asset code
-                                      10      # amount
+                                      10,     # amount
+                                      0,      # fee
                                       ))
 
         print()
@@ -81,12 +81,12 @@ def main():
         print("5. Generate signed unregister node transaction")
         print(milecsa.__unregister_node(pk1['public-key'],
                                         pk1['private-key'],
-                                        "mile.global",  # node address
                                         0,  # block id
-                                        0   # trx id
+                                        0,  # trx id
+                                        0  # fee
                                         ))
 
-    except milecsa.error as error:
+    except Exception as error:
         print(error)
 
 
@@ -95,8 +95,8 @@ def main():
     try:
         print("7. Test exception")
 
-        print(milecsa.__transfer_assets(pk1['public-key'], '-', pk3["public-key"], "0", 1, "20"))
-    except milecsa.error as error:
+        print(milecsa.__transfer_assets(pk1['public-key'], pk1['private-key'], pk3["public-key"], 0, 1, 1, "20"))
+    except Exception as error:
         print(error)
 
 

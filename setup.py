@@ -6,7 +6,7 @@ import sys
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-__version__ = '0.7.4'
+__version__ = '0.8.0'
 __milecsa_api_version__ = '1.1.3'
 
 darwin_flags = ['-mmacosx-version-min=10.12']

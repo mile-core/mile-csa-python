@@ -4,25 +4,24 @@ from .transaction_parser import TransactionParser
 
 
 class Block:
-
-    __rpc__ = None
-
     def __init__(self, block_id):
         # todo lazy
-        self.blockId = block_id
-        rpc = Rpc("get-block-by-id", params={"id": self.blockId})
+        self.block_id = block_id
+
+        self.tx_parser = TransactionParser()
+
+        rpc = Rpc("get-block-by-id", params={"id": self.block_id})
         result = rpc.exec().result
-        self.blockData = result['block-data']
+        self.block_data = result['block-data']
 
-        self.blockId = self.blockData['id']
-        self.timestamp = self.blockData['timestamp']
-        self.version = int(self.blockData['version'])
+        self.block_id = self.block_data['id']
+        self.timestamp = self.block_data['timestamp']
+        self.version = int(self.block_data['version'])
         self.transactions = []
-        for trx in self.blockData['transactions']:
-            parser = TransactionParser(json_data=trx)
-            self.transactions += parser.transactions
+        for tx in self.block_data['transactions']:
+            self.transactions += self.tx_parser.parse(tx, self.block_id)
 
-        #self.transaction_count = int(self.blockData['transaction-count'])
+        # self.transaction_count = int(self.block_data['transaction-count'])
         self.transaction_count = len(self.transactions)
 
 

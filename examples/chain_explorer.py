@@ -1,3 +1,5 @@
+import pprint
+
 from milecsa import Chain, config
 
 
@@ -5,7 +7,7 @@ from milecsa import Chain, config
 # Print block state
 #
 def print_block(chain, block):
-    print("Block Id:  ", block.blockId)
+    print("Block Id:  ", block.block_id)
     print("Version:   ", block.version)
     print("Timestamp: ", block.timestamp)
     print("Trx count: ", block.transaction_count)
@@ -13,17 +15,17 @@ def print_block(chain, block):
     #
     # Get bloc transaction
     #
+    pp = pprint.PrettyPrinter(indent=2)
     for t in block.transactions:
-        asset = chain.asset_name(t.assetCode)
-        print(t, t.source, "->[", t.description, "]", t.destination, " asset: ", t.assetCode, asset, " amount: ",
-              t.amount)
+        asset = chain.asset_name(t.asset_code)
+        pp.pprint([asset, t.__class__.__name__, t.__dict__])
 
 
 def main():
     #
     # Set your full node url
     #
-    config.url = "https://wallet.testnet.mile.global"
+    config.web.url = "https://wallet.testnet.mile.global"
     #
     # Enable client balancing
     #
@@ -32,7 +34,7 @@ def main():
     #
     # Enable debug printing
     #
-    config.rpcDebug = True
+    config.rpcDebug = False
 
     # Open chain
     chain = Chain()

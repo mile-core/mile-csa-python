@@ -1,34 +1,19 @@
-from __milecsa import __register_node as register_node, \
-    __unregister_node as unregister_node
-
-from .transactions import Transaction
+from .transactions import RegisterNode, UnregisterNode, PostTokenRate
 
 
-class Node(Transaction):
-    # todo inconsistency
-
-    address = None
-
-    def __init__(self, wallet, address, assetCode, amount):
-
-        Transaction.__init__(self, wallet=wallet)
-
-        self.assetCode = int(assetCode)
-        self.amount = str(amount)
-
+class Node:
+    def __init__(self, wallet, address):
         self.address = address
+        self.wallet = wallet
 
-    def register(self):
-        return register_node(self.wallet.public_key,
-                             self.wallet.private_key,
-                             self.address,
-                             self.block_id,
-                             self.tx_id,
-                             self.assetCode,
-                             self.amount)
+    def register(self, amount, fee=0):
+        tx = RegisterNode(self.wallet, self.address, amount, fee)
+        return tx.send()
 
-    def unregister(self):
-        return unregister_node(self.wallet.public_key,
-                               self.wallet.private_key,
-                               self.block_id,
-                               self.tx_id)
+    def unregister(self, fee=0):
+        tx = UnregisterNode(self.wallet, fee)
+        return tx.send()
+
+    def post_token_rate(self, rate, fee=0):
+        tx = PostTokenRate(self.wallet, rate, fee)
+        return tx.send()

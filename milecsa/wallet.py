@@ -46,9 +46,9 @@ class Wallet:
 
         def get_balances(self, name=None, code=None):
             if name:
-                x = [x for x in self.balances if x.name == name]
+                x = [x for x in self.balances if x.asset.name == name]
             elif code:
-                x = [x for x in self.balances if x.code == code]
+                x = [x for x in self.balances if x.asset.code == code]
             else:
                 raise ValueError("Name or value are not specified")
 
@@ -103,20 +103,20 @@ class Wallet:
 
         tx_id = int(response.result['preferred-transaction-id'])
         return Wallet.State(balances=balances,
-                            preferred_transaction_id=tx_id)  # todo
+                            preferred_transaction_id=tx_id)
 
     def get_transactions(self, limit=1000):
         rpc_transactions = Rpc("get-wallet-transactions", params={"public-key": self.public_key, "limit": limit})
         response = rpc_transactions.exec()
 
         trx_list = []
+        parser = TransactionParser()
         for t in response.result['transactions']:
-            parser = TransactionParser(json_data=t['description'])
-            trx_list += parser.transactions
+            trx_list += parser.parse(t['description'], -1)
 
         return trx_list
 
-    def transfer(self, dest, asset_code, amount, description=None, fee=0):
+    def transfer(self, dest, asset_code, amount, description='', fee=0):
 
         if type(dest) is Wallet:
             destination = dest.public_key

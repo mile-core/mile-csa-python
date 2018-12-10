@@ -23,7 +23,7 @@ class MyTestCase(unittest.TestCase):
         print(dst.public_key)
         for b in dst.get_state().balances:
             print(b)
-        result = src.transfer(dest=dst, asset_code=0, amount=0.01, description="transfer test3")
+        result = src.transfer(dest=dst, asset_code=0, amount=0.01, description="transfer test")
 
         self.assertFalse(not result)
 

@@ -3,7 +3,7 @@ from milecsa import Wallet, config
 
 def main():
 
-    config.url = "http://wallet.testnet.mile.global"
+    config.web.url = "https://wallet.testnet.mile.global"
     config.rpcDebug = True
 
     wallet0 = Wallet()
