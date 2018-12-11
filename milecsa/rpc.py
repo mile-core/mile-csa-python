@@ -49,7 +49,7 @@ class Rpc:
                     timeout=config.connectionTimeout
                 ).json()
 
-                cls.__current_url_index += 1
+            cls.__current_url_index += 1
             return cls.__urls[cls.__current_url_index % len(cls.__urls)] + cls.__path
         else:
             return config.url + cls.__path
