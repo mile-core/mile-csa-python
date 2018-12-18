@@ -1,18 +1,20 @@
+import pprint
 import unittest
-from milecsa import Chain, Config
+from milecsa import Chain
 from .local_config import *
 
 
 def print_block(chain, block):
-    print("Id:        ", block.blockId)
+    print()
+    print("Id:        ", block.block_id)
     print("Version:   ", block.version)
     print("Timestamp: ", block.timestamp)
     print("Trx count: ", block.transaction_count)
 
+    pp = pprint.PrettyPrinter(indent=2)
     for t in block.transactions:
-        asset = chain.asset_name(t.assetCode)
-        print(t, t.source, "->[", t.description, "]", t.destination, " asset: ", t.assetCode, asset, " amount: ",
-              t.amount)
+        asset = chain.asset_name(t.asset_code)
+        pp.pprint([asset, t.__class__.__name__, t.__dict__])
 
 
 class MyTestCase(unittest.TestCase):

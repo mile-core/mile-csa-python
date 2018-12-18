@@ -1,11 +1,10 @@
 import unittest
-from milecsa import Rpc, Config
+from milecsa import Rpc
 from .local_config import *
 
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
-
 
         req0 = Rpc("get-blockchain-info", params={})
         req1 = Rpc("get-blockchain-info", params={})

@@ -1,7 +1,11 @@
-from milecsa import Config
+from milecsa import config
 
-Config.sslVerification = False
-Config.connectionTimeout = 30
-Config.url = "https://wallet.testnet.mile.global"
-Config.useBalancing = True
-Config.rpcDebug = False
+config.rpcDebug = False
+# config.sslVerification = False
+config.connectionTimeout = 30
+
+config.web.url = "https://wallet.testnet.mile.global"
+config.useBalancing = True
+# or
+# config.url = "https://lotus000.testnet.mile.global"
+# config.useBalancing = False

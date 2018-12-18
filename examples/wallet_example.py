@@ -1,10 +1,10 @@
-from milecsa import Wallet, Config
+from milecsa import Wallet, config
 
 
 def main():
 
-    Config.rpcDebug = True
-    Config.url = "https://wallet.testnet.mile.global"
+    config.web.url = "https://wallet.testnet.mile.global"
+    config.rpcDebug = True
 
     wallet0 = Wallet()
 
@@ -12,14 +12,14 @@ def main():
 
     wallet2 = Wallet(phrase="secret-phrase")
 
-    wallet3 = Wallet(public_key=wallet0.publicKey, private_key=wallet0.privateKey)
+    wallet3 = Wallet(public_key=wallet0.public_key, private_key=wallet0.private_key)
 
-    wallet4 = Wallet(private_key=wallet3.privateKey)
+    wallet4 = Wallet(private_key=wallet3.private_key)
 
-    print(wallet0.publicKey, wallet0.privateKey)
-    print(wallet1.publicKey, wallet1.privateKey)
-    print(wallet3.publicKey, wallet3.privateKey)
-    print(wallet4.publicKey, wallet4.privateKey)
+    print(wallet0.public_key, wallet0.private_key)
+    print(wallet1.public_key, wallet1.private_key)
+    print(wallet3.public_key, wallet3.private_key)
+    print(wallet4.public_key, wallet4.private_key)
 
     print(wallet0 == wallet2)
     print(wallet0 == wallet3)
@@ -28,7 +28,7 @@ def main():
 
     state = wallet3.get_state()
 
-    print(state.last_transaction_id)
+    print(state.preferred_transaction_id)
 
     for b in state.balances:
         print(b)

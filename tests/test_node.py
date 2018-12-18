@@ -1,7 +1,7 @@
-import unittest, time
+import unittest
+from time import sleep
 
-from milecsa import Node
-from milecsa.Wallet import Wallet
+from milecsa import Node, Wallet
 from .local_config import *
 
 
@@ -11,7 +11,7 @@ class MyTestCase(unittest.TestCase):
         # Put your address
         #
         w = Wallet(phrase="secret-phrase")
-        print(w.publicKey, w.privateKey)
+        print(w.public_key, w.private_key)
         state = w.get_state()
         for b in state.balances:
             print(b)
@@ -22,6 +22,13 @@ class MyTestCase(unittest.TestCase):
 
         result = node.register(10001)
         self.assertFalse(not result)
+
+        sleep(42)
+
+        result = node.post_token_rate(1.41)
+        self.assertFalse(not result)
+
+        sleep(42)
 
         result = node.unregister()
         self.assertFalse(not result)

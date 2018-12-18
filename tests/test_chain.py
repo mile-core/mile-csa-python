@@ -1,5 +1,5 @@
 import unittest
-from milecsa import Chain, Config
+from milecsa import Chain
 from .local_config import *
 
 
@@ -15,6 +15,8 @@ class MyTestCase(unittest.TestCase):
               chain0.supported_transactions,
               chain0.asset_codes,
               chain0.asset_names)
+
+        print(chain0.get_state())
 
         print("Last block id: ", chain1.get_current_block_id())
 

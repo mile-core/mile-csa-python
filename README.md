@@ -46,37 +46,40 @@ Also you can use specific version: just replace master with target version
      
 # Examples
 
-**Global configuration**
+### Global configuration
 ```python
-from milecsa.Config import Config
+from milecsa import config
 
 #
 # disable SSL verification
 #
-Config.sslVerification = False
+# config.sslVerification = False
 
 #
 # set up user defined connection timeout
 #
-Config.connectionTimeout = 30 # seconds
+config.connectionTimeout = 30 # seconds
 
 #
 # use MILE testnet 
 #
-Config.url = "https://wallet.testnet.mile.global"
+config.web.url = "https://wallet.testnet.mile.global"
 
 ```
 
-**Wallet create**
+### Wallet create
+
+[github](https://github.com/mile-core/mile-csa-python/tree/master/examples/wallet_create.py)
+
 ```python
-from milecsa.Wallet import Wallet
+from milecsa import Wallet
 
 
 def main():
 
     wallet0 = Wallet(phrase="Some phrase")
 
-    print(wallet0.publicKey, wallet0.privateKey)
+    print(wallet0.public_key, wallet0.private_key)
 
     #
     # Put your address
@@ -84,7 +87,7 @@ def main():
     wallet1 = Wallet(public_key="...")
 
     state = wallet1.get_state()
-    print(state.balances, state.last_transaction_id, wallet1.publicKey)
+    print(state.balances, state.preferred_transaction_id, wallet1.public_key)
     for b in state.balances:
         print(b)
 
@@ -102,11 +105,16 @@ def main():
     print(wqr1)
     wqr1.save("./img-wqr1.png")
 
+
 if __name__ == '__main__':
     main()
+
 ```
 
-**Send transfer**
+### Transfer
+
+[github](https://github.com/mile-core/mile-csa-python/tree/master/examples/transfer_example.py)
+
 ```python
 from milecsa import Transfer, Wallet
 import time
@@ -115,16 +123,16 @@ import time
 def main():
 
     src = Wallet(phrase="Some WTF!? secret phrase")
-    print(src.publicKey, src.privateKey)
+    print(src.public_key, src.private_key)
 
     dst = Wallet()
 
-    dst_public_key = Wallet().publicKey
+    dst_public_key = Wallet().public_key
 
     state = src.get_state()
 
-    trx0 = Transfer(src=src, dest=dst, asset=1, amount=0.001)
-    trx1 = Transfer(src=src, dest=dst_public_key, asset=1, amount=10)
+    trx0 = Transfer(src=src, dest=dst, asset_code=1, amount=0.001)
+    trx1 = Transfer(src=src, dest=dst_public_key, asset_code=1, amount=1)
 
     print(trx0.data)
     print(trx1.data)
@@ -132,70 +140,75 @@ def main():
     #
     # Put your address
     #
-    src = Wallet(private_key="...")
+    src = Wallet(phrase="secret-phrase")
 
-    print(src.publicKey, src.privateKey)
+    print(src.public_key, src.private_key)
 
     #
     # Put your address
     #
-    dst = Wallet(public_key="...")
+    dst = Wallet(phrase="destination-secret-phrase")
 
-    result = src.transfer(dest=dst, asset=1, amount=1)
+    result = src.transfer(dest=dst, asset_code=0, amount=0.1, description="give my money back!")
 
     print(result)
 
-    time.sleep(60)
+    time.sleep(21)
 
     state = dst.get_state()
     for b in state.balances:
         print(b)
 
 
-
 if __name__ == "__main__":
     main()
+
 ```
 
-**Do XDR Emission**
+
+### Do XDR Emission
+
+[github](https://github.com/mile-core/mile-csa-python/tree/master/examples/emission_example.py)
+
 ```python
-from milecsa import Transfer, Wallet
+from milecsa import Wallet
 import time
+
 
 def main():
     #
     # Put your address
     #
-    src = Wallet(private_key="...")
+    wallet = Wallet(private_key="...")
 
-    #
-    # Put your address
-    #
-    dst = Wallet(public_key="...")
-
-    result = src.emission(dest=dst, asset=1, amount=1000)
+    result = wallet.emission(asset_code=1)
 
     print(result)
 
-    time.sleep(60)
+    time.sleep(42)
 
-    state = dst.get_state()
+    state = wallet.get_state()
     for b in state.balances:
         print(b)
 
 ```
 
-**Explore blocks**
+
+### Explore blocks
+
+[github](https://github.com/mile-core/mile-csa-python/tree/master/examples/emission_example.py)
 
 ```python
-from milecsa import Chain, Config
+import pprint
+
+from milecsa import Chain, config
 
 
 #
 # Print block state
 #
 def print_block(chain, block):
-    print("Block Id:  ", block.blockId)
+    print("Block Id:  ", block.block_id)
     print("Version:   ", block.version)
     print("Timestamp: ", block.timestamp)
     print("Trx count: ", block.transaction_count)
@@ -203,21 +216,26 @@ def print_block(chain, block):
     #
     # Get bloc transaction
     #
+    pp = pprint.PrettyPrinter(indent=2)
     for t in block.transactions:
-        asset = chain.asset_name(t.assetCode)
-        print(t, t.source, "->[", t.description, "]", t.destination, " asset: ", t.assetCode, asset, " amount: ",
-              t.amount)
+        asset = chain.asset_name(t.asset_code)
+        pp.pprint([asset, t.__class__.__name__, t.__dict__])
 
 
 def main():
     #
     # Set your full node url
     #
-    Config.url = "http://node002.testnet.mile.global"
+    config.web.url = "https://wallet.testnet.mile.global"
     #
-    # Disable client balancing
+    # Enable client balancing
     #
-    Config.useBalancing = False
+    config.useBalancing = True
+
+    #
+    # Enable debug printing
+    #
+    config.rpcDebug = False
 
     # Open chain
     chain = Chain()

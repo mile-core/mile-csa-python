@@ -1,4 +1,3 @@
-import json
 import unittest
 
 from __milecsa import __key_pair as key_pair, \
@@ -7,8 +6,9 @@ from __milecsa import __key_pair as key_pair, \
     __transfer_assets as transfer_assets, \
     __emission as emission, \
     __register_node as register_node, \
-    __unregister_node as unregister_node,\
+    __unregister_node as unregister_node, \
     __post_token_rate as post_token_rate
+
 
 class TestBindings(unittest.TestCase):
     def test_keypair(self):
